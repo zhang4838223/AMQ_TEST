@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+	<bean id="dbThreadJob" class="com.zxj.job.DBThreadJob" />
+
+	<bean id="dbThreadJobFactory"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="dbThreadJob" />
+		</property>
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<property name="concurrent">
+			<value>false</value>
+		</property>
+	</bean>
+
+	<!--<bean id="dbThreadJobTimes" class="org.springframework.scheduling.quartz.CronTriggerBean">-->
+		<!--<property name="jobDetail">-->
+			<!--<ref bean="dbThreadJobFactory" />-->
+		<!--</property>-->
+		<!--<property name="cronExpression">-->
+			<!--<value>0 0 4 * * ? *</value>-->
+		<!--</property>-->
+	<!--</bean>-->
+
+	<bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<!-- 这里不可以直接在属性jobDetail中引用taskJob，因为他要求的是一个jobDetail类型的对象，所以我们得通过MethodInvokingJobDetailFactoryBean来转一下 -->
+		<property name="jobDetail"><ref bean="dbThreadJobFactory" /></property>
+		<!-- 每天的8点到21点每隔1分钟触发，具体说明见附录 -->
+		<property name="cronExpression"><value>0/5 * * * * ?</value></property>
+
+	</bean>
+
+	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<!-- 添加触发器 -->
+		<property name="triggers">
+			<list>
+				<ref local="cronTrigger" />
+			</list>
+		</property>
+	</bean>
+
+</beans>

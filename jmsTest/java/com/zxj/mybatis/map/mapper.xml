@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zxj.dao.EmployeeDao">
+
+    <!-- ############################## -->
+    <!-- ###### 查询 ###### -->
+    <!-- ############################## -->
+
+    <select id="selectAll" resultType="com.zxj.mybatis.map.Employee">
+        select * from emp
+    </select>
+
+    <select id="selectAllWithNotSend" parameterType="java.util.Map" resultType="com.zxj.mybatis.map.Employee">
+        select * from emp WHERE STATE <![CDATA[ <> ]]> #{state} ORDER BY EMPNO
+    </select>
+
+    <select id="select"  parameterType="java.util.Map" resultType="com.zxj.mybatis.map.Employee">
+        SELECT * FROM emp WHERE empno=#{empno}
+    </select>
+
+    <select id="findTotalCountNotSend"  parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT count(1) FROM emp WHERE STATE <![CDATA[ <> ]]> #{state}
+    </select>
+
+    <select id="findPageList"  parameterType="java.util.Map" resultType="com.zxj.mybatis.map.Employee">
+        SELECT * FROM ( SELECT A.*, ROWNUM RN
+        FROM (SELECT * FROM EMP WHERE state <![CDATA[ <> ]]> #{state} ORDER BY EMPNO) A WHERE ROWNUM <![CDATA[ <= ]]> #{endIndex} ) WHERE RN >= #{startIndex}
+    </select>
+
+    <insert id="insert" parameterType="com.zxj.mybatis.map.Employee">
+        INSERT INTO emp
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="empno != null" >
+                EMPNO,
+            </if>
+            <if test="ename != null" >
+                ENAME,
+            </if>
+            <if test="job != null" >
+                JOB,
+            </if>
+            <if test="mgr != null" >
+                MGR,
+            </if>
+            <if test="hiredate != null" >
+                HIREDATE,
+            </if>
+            <if test="sal != null" >
+                SAL,
+            </if>
+            <if test="comm != null" >
+                COMM,
+            </if>
+            <if test="deptno != null" >
+                DEPTNO,
+            </if>
+            <if test="state != null" >
+                STATE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="empno != null" >
+                #{empno},
+            </if>
+            <if test="ename != null" >
+                #{ename},
+            </if>
+            <if test="job != null" >
+                #{job},
+            </if>
+            <if test="mgr != null" >
+                #{mgr},
+            </if>
+            <if test="hiredate != null" >
+                #{hiredate},
+            </if>
+            <if test="sal != null" >
+                #{sal},
+            </if>
+            <if test="comm != null" >
+                #{comm},
+            </if>
+            <if test="deptno != null" >
+                #{deptno},
+            </if>
+            <if test="state != null" >
+                #{state},
+            </if>
+        </trim>
+    </insert>
+</mapper>

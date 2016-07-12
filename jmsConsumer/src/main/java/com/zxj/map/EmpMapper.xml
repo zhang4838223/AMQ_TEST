@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zxj.dao.EmpMapper">
+    <select id="selectAll" resultType="com.zxj.model.Emp">
+         select * from emp
+    </select>
+    <insert id="insert" parameterType="com.zxj.model.Emp">
+        INSERT INTO emp
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="empno != null" >
+                EMPNO,
+            </if>
+            <if test="ename != null" >
+                ENAME,
+            </if>
+            <if test="job != null" >
+                JOB,
+            </if>
+            <if test="mgr != null" >
+                MGR,
+            </if>
+            <if test="hiredate != null" >
+                HIREDATE,
+            </if>
+            <if test="sal != null" >
+                SAL,
+            </if>
+            <if test="comm != null" >
+                COMM,
+            </if>
+            <if test="deptno != null" >
+                DEPTNO,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="empno != null" >
+                #{empno},
+            </if>
+            <if test="ename != null" >
+                #{ename},
+            </if>
+            <if test="job != null" >
+                #{job},
+            </if>
+            <if test="mgr != null" >
+                #{mgr},
+            </if>
+            <if test="hiredate != null" >
+                #{hiredate},
+            </if>
+            <if test="sal != null" >
+                #{sal},
+            </if>
+            <if test="comm != null" >
+                #{comm},
+            </if>
+            <if test="deptno != null" >
+                #{deptno},
+            </if>
+        </trim>
+    </insert>
+</mapper>
