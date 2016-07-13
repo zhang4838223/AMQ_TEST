@@ -1,5 +1,6 @@
 package com.zxj.jms;
 
+import com.zxj.manger.JmsReceiverManager;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -10,6 +11,12 @@ import javax.jms.*;
  */
 public class JmsTest {
     public static void main(String[] args) throws JMSException {
+//        myTest1();
+        JmsReceiverManager.getInstance().setListeners();
+        System.out.println("consumer is running!!");
+    }
+
+    private static void myTest1() throws JMSException {
         ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext-jms.xml");
         ConnectionFactory factory = (ConnectionFactory) context.getBean("pooledConnectionFactory");
         Connection conn = factory.createConnection();
@@ -24,6 +31,5 @@ public class JmsTest {
         producer.close();
         sen.close();
         conn.close();
-
     }
 }

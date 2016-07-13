@@ -28,8 +28,8 @@ import java.util.List;
 public class ConsumerListener implements MessageListener {
 
     private static final Log logger = LogFactory.getLog(ConsumerListener.class);
-    @Autowired
-    private JmsTemplate jmsTemplate;
+//    @Autowired
+//    private JmsTemplate jmsTemplate;
     @Autowired
     private SqlDao sqlDao;
 

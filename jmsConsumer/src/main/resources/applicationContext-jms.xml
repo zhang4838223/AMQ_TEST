@@ -38,144 +38,142 @@
     </bean>
 
     <!-- Spring提供的JMS工具类，它可以进行消息发送、接收等 -->
-    <bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
-        <!-- 这个connectionFactory对应的是我们定义的Spring提供的那个ConnectionFactory对象 -->
-        <property name="connectionFactory" ref="pooledConnectionFactory" />
-        <property name="defaultDestination" ref="resDestination"></property>
+    <!--<bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">-->
+        <!--&lt;!&ndash; 这个connectionFactory对应的是我们定义的Spring提供的那个ConnectionFactory对象 &ndash;&gt;-->
+        <!--<property name="connectionFactory" ref="pooledConnectionFactory" />-->
+        <!--<property name="defaultDestination" ref="resDestination"></property>-->
 
-        <property name="pubSubDomain" value="false" />
-        <property name="explicitQosEnabled" value="true" />
-        <property name="deliveryMode" value="1" />
-        <property name="receiveTimeout" value="0" />
-    </bean>
-
-    <!--这个是队列目的地，点对点的-->
-    <bean id="queueDestination" class="org.apache.activemq.command.ActiveMQQueue">
-        <constructor-arg>
-            <value>monkey</value>
-        </constructor-arg>
-    </bean>
-    <!--这个是队列目的地，点对点的-->
-    <bean id="queueDestination1" class="org.apache.activemq.command.ActiveMQQueue">
-        <constructor-arg>
-            <value>monkey1</value>
-        </constructor-arg>
-    </bean>
-    <!--这个是队列目的地，点对点的-->
-    <bean id="queueDestination2" class="org.apache.activemq.command.ActiveMQQueue">
-        <constructor-arg>
-            <value>monkey2</value>
-        </constructor-arg>
-    </bean>
-    <!--这个是队列目的地，点对点的-->
-    <bean id="queueDestination3" class="org.apache.activemq.command.ActiveMQQueue">
-        <constructor-arg>
-            <value>monkey3</value>
-        </constructor-arg>
-    </bean>
+        <!--<property name="pubSubDomain" value="false" />-->
+        <!--<property name="explicitQosEnabled" value="true" />-->
+        <!--<property name="deliveryMode" value="1" />-->
+        <!--<property name="receiveTimeout" value="0" />-->
+    <!--</bean>-->
 
     <!--这个是队列目的地，点对点的-->
-    <bean id="resDestination" class="org.apache.activemq.command.ActiveMQQueue">
-        <constructor-arg>
-            <value>response</value>
-        </constructor-arg>
-    </bean>
+    <!--<bean id="queueDestination" class="org.apache.activemq.command.ActiveMQQueue">-->
+        <!--<constructor-arg index="0" value="queue_1,queue_2,queue_3,queue_4" />-->
+    <!--</bean>-->
+    <!--&lt;!&ndash;这个是队列目的地，点对点的&ndash;&gt;-->
+    <!--<bean id="queueDestination1" class="org.apache.activemq.command.ActiveMQQueue">-->
+        <!--<constructor-arg>-->
+            <!--<value>monkey1</value>-->
+        <!--</constructor-arg>-->
+    <!--</bean>-->
+    <!--&lt;!&ndash;这个是队列目的地，点对点的&ndash;&gt;-->
+    <!--<bean id="queueDestination2" class="org.apache.activemq.command.ActiveMQQueue">-->
+        <!--<constructor-arg>-->
+            <!--<value>monkey2</value>-->
+        <!--</constructor-arg>-->
+    <!--</bean>-->
+    <!--&lt;!&ndash;这个是队列目的地，点对点的&ndash;&gt;-->
+    <!--<bean id="queueDestination3" class="org.apache.activemq.command.ActiveMQQueue">-->
+        <!--<constructor-arg>-->
+            <!--<value>monkey3</value>-->
+        <!--</constructor-arg>-->
+    <!--</bean>-->
+
+    <!--&lt;!&ndash;这个是队列目的地，点对点的&ndash;&gt;-->
+    <!--<bean id="resDestination" class="org.apache.activemq.command.ActiveMQQueue">-->
+        <!--<constructor-arg>-->
+            <!--<value>response</value>-->
+        <!--</constructor-arg>-->
+    <!--</bean>-->
     <!--这个是主题目的地，一对多的-->
     <!--<bean id="topicDestination" class="org.apache.activemq.command.ActiveMQTopic">-->
         <!--<constructor-arg value="topic01"/>-->
     <!--</bean>-->
 
     <!-- 消息监听器 -->
-    <bean id="costumerListener"
-          class="com.zxj.jms.ConsumerListener" />
+    <!--<bean id="costumerListener"-->
+          <!--class="com.zxj.jms.ConsumerListener" />-->
     <!-- 消息监听器 -->
-    <bean id="costumerListener1"
-          class="com.zxj.jms.ConsumerListener1" />
-    <!-- 消息监听器 -->
-    <bean id="costumerListener2"
-          class="com.zxj.jms.ConsumerListener2" />
-    <!-- 消息监听器 -->
-    <bean id="costumerListener3"
-          class="com.zxj.jms.ConsumerListener3" />
+    <!--<bean id="costumerListener1"-->
+          <!--class="com.zxj.jms.ConsumerListener1" />-->
+    <!--&lt;!&ndash; 消息监听器 &ndash;&gt;-->
+    <!--<bean id="costumerListener2"-->
+          <!--class="com.zxj.jms.ConsumerListener2" />-->
+    <!--&lt;!&ndash; 消息监听器 &ndash;&gt;-->
+    <!--<bean id="costumerListener3"-->
+          <!--class="com.zxj.jms.ConsumerListener3" />-->
 
     <!-- 任务执行器 -->
     <bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor"/>
 
     <!-- 消息监听容器 -->
-    <bean id="jmsContainer"
-          class="org.springframework.jms.listener.DefaultMessageListenerContainer">
-        <property name="connectionFactory" ref="connectionFactory" />
-        <property name="destination" ref="queueDestination" />
-        <property name="messageListener" ref="costumerListener" />
-        <property name="taskExecutor" ref="taskExecutor"/>
+    <!--<bean id="jmsContainer"-->
+          <!--class="org.springframework.jms.listener.DefaultMessageListenerContainer">-->
+        <!--<property name="connectionFactory" ref="connectionFactory" />-->
+        <!--<property name="destination" ref="queueDestination" />-->
+        <!--<property name="messageListener" ref="costumerListener" />-->
+        <!--<property name="taskExecutor" ref="taskExecutor"/>-->
 
-        <property name="sessionTransacted" value="false"/>
-        <!-- 不接收同一连接的消息(如果是本地测试，需要设置为false) -->
+        <!--<property name="sessionTransacted" value="false"/>-->
+        <!--&lt;!&ndash; 不接收同一连接的消息(如果是本地测试，需要设置为false) &ndash;&gt;-->
         <!--<property name="pubSubNoLocal" value="false"/>-->
 
-        <!--&lt;!&ndash; 应该只是在Destination为Queue的时候才使用多个MessageConsumer &ndash;&gt;-->
+        <!--&lt;!&ndash;&lt;!&ndash; 应该只是在Destination为Queue的时候才使用多个MessageConsumer &ndash;&gt;&ndash;&gt;-->
         <!--<property name="concurrentConsumers" value="4"/>-->
-        <!--<property name="maxConcurrentConsumers" value="5" />-->
+        <!--<property name="maxConcurrentConsumers" value="6" />-->
         <!--<property name="idleTaskExecutionLimit" value="2" />-->
         <!--<property name="receiveTimeout" value="10000" />-->
 
-    </bean>
+    <!--</bean>-->
 
     <!-- 消息监听容器 -->
-    <bean id="jmsContainer1"
-          class="org.springframework.jms.listener.DefaultMessageListenerContainer">
-        <property name="connectionFactory" ref="connectionFactory" />
-        <property name="destination" ref="queueDestination1" />
-        <property name="messageListener" ref="costumerListener1" />
-        <property name="taskExecutor" ref="taskExecutor"/>
+    <!--<bean id="jmsContainer1"-->
+          <!--class="org.springframework.jms.listener.DefaultMessageListenerContainer">-->
+        <!--<property name="connectionFactory" ref="connectionFactory" />-->
+        <!--<property name="destination" ref="queueDestination1" />-->
+        <!--<property name="messageListener" ref="costumerListener1" />-->
+        <!--<property name="taskExecutor" ref="taskExecutor"/>-->
 
-        <property name="sessionTransacted" value="false"/>
-        <!-- 不接收同一连接的消息(如果是本地测试，需要设置为false) -->
-        <!--<property name="pubSubNoLocal" value="false"/>-->
+        <!--<property name="sessionTransacted" value="false"/>-->
+        <!--&lt;!&ndash; 不接收同一连接的消息(如果是本地测试，需要设置为false) &ndash;&gt;-->
+        <!--&lt;!&ndash;<property name="pubSubNoLocal" value="false"/>&ndash;&gt;-->
 
-        <!--&lt;!&ndash; 应该只是在Destination为Queue的时候才使用多个MessageConsumer &ndash;&gt;-->
-        <!--<property name="concurrentConsumers" value="4"/>-->
-        <!--<property name="maxConcurrentConsumers" value="5" />-->
-        <!--<property name="idleTaskExecutionLimit" value="2" />-->
-        <!--<property name="receiveTimeout" value="10000" />-->
+        <!--&lt;!&ndash;&lt;!&ndash; 应该只是在Destination为Queue的时候才使用多个MessageConsumer &ndash;&gt;&ndash;&gt;-->
+        <!--&lt;!&ndash;<property name="concurrentConsumers" value="4"/>&ndash;&gt;-->
+        <!--&lt;!&ndash;<property name="maxConcurrentConsumers" value="5" />&ndash;&gt;-->
+        <!--&lt;!&ndash;<property name="idleTaskExecutionLimit" value="2" />&ndash;&gt;-->
+        <!--&lt;!&ndash;<property name="receiveTimeout" value="10000" />&ndash;&gt;-->
 
-    </bean>
+    <!--</bean>-->
     <!-- 消息监听容器 -->
-    <bean id="jmsContainer2"
-          class="org.springframework.jms.listener.DefaultMessageListenerContainer">
-        <property name="connectionFactory" ref="connectionFactory" />
-        <property name="destination" ref="queueDestination2" />
-        <property name="messageListener" ref="costumerListener2" />
-        <property name="taskExecutor" ref="taskExecutor"/>
+    <!--<bean id="jmsContainer2"-->
+          <!--class="org.springframework.jms.listener.DefaultMessageListenerContainer">-->
+        <!--<property name="connectionFactory" ref="connectionFactory" />-->
+        <!--<property name="destination" ref="queueDestination2" />-->
+        <!--<property name="messageListener" ref="costumerListener2" />-->
+        <!--<property name="taskExecutor" ref="taskExecutor"/>-->
 
-        <property name="sessionTransacted" value="false"/>
-        <!-- 不接收同一连接的消息(如果是本地测试，需要设置为false) -->
-        <!--<property name="pubSubNoLocal" value="false"/>-->
+        <!--<property name="sessionTransacted" value="false"/>-->
+        <!--&lt;!&ndash; 不接收同一连接的消息(如果是本地测试，需要设置为false) &ndash;&gt;-->
+        <!--&lt;!&ndash;<property name="pubSubNoLocal" value="false"/>&ndash;&gt;-->
 
-        <!--&lt;!&ndash; 应该只是在Destination为Queue的时候才使用多个MessageConsumer &ndash;&gt;-->
-        <!--<property name="concurrentConsumers" value="4"/>-->
-        <!--<property name="maxConcurrentConsumers" value="5" />-->
-        <!--<property name="idleTaskExecutionLimit" value="2" />-->
-        <!--<property name="receiveTimeout" value="10000" />-->
-    </bean>
+        <!--&lt;!&ndash;&lt;!&ndash; 应该只是在Destination为Queue的时候才使用多个MessageConsumer &ndash;&gt;&ndash;&gt;-->
+        <!--&lt;!&ndash;<property name="concurrentConsumers" value="4"/>&ndash;&gt;-->
+        <!--&lt;!&ndash;<property name="maxConcurrentConsumers" value="5" />&ndash;&gt;-->
+        <!--&lt;!&ndash;<property name="idleTaskExecutionLimit" value="2" />&ndash;&gt;-->
+        <!--&lt;!&ndash;<property name="receiveTimeout" value="10000" />&ndash;&gt;-->
+    <!--</bean>-->
     <!-- 消息监听容器 -->
-    <bean id="jmsContainer3"
-          class="org.springframework.jms.listener.DefaultMessageListenerContainer">
-        <property name="connectionFactory" ref="connectionFactory" />
-        <property name="destination" ref="queueDestination3" />
-        <property name="messageListener" ref="costumerListener3" />
-        <property name="taskExecutor" ref="taskExecutor"/>
+    <!--<bean id="jmsContainer3"-->
+          <!--class="org.springframework.jms.listener.DefaultMessageListenerContainer">-->
+        <!--<property name="connectionFactory" ref="connectionFactory" />-->
+        <!--<property name="destination" ref="queueDestination3" />-->
+        <!--<property name="messageListener" ref="costumerListener3" />-->
+        <!--<property name="taskExecutor" ref="taskExecutor"/>-->
 
-        <property name="sessionTransacted" value="false"/>
-        <!-- 不接收同一连接的消息(如果是本地测试，需要设置为false) -->
-        <!--<property name="pubSubNoLocal" value="false"/>-->
+        <!--<property name="sessionTransacted" value="false"/>-->
+        <!--&lt;!&ndash; 不接收同一连接的消息(如果是本地测试，需要设置为false) &ndash;&gt;-->
+        <!--&lt;!&ndash;<property name="pubSubNoLocal" value="false"/>&ndash;&gt;-->
 
-        <!--&lt;!&ndash; 应该只是在Destination为Queue的时候才使用多个MessageConsumer &ndash;&gt;-->
-        <!--<property name="concurrentConsumers" value="4"/>-->
-        <!--<property name="maxConcurrentConsumers" value="5" />-->
-        <!--<property name="idleTaskExecutionLimit" value="2" />-->
-        <!--<property name="receiveTimeout" value="10000" />-->
+        <!--&lt;!&ndash;&lt;!&ndash; 应该只是在Destination为Queue的时候才使用多个MessageConsumer &ndash;&gt;&ndash;&gt;-->
+        <!--&lt;!&ndash;<property name="concurrentConsumers" value="4"/>&ndash;&gt;-->
+        <!--&lt;!&ndash;<property name="maxConcurrentConsumers" value="5" />&ndash;&gt;-->
+        <!--&lt;!&ndash;<property name="idleTaskExecutionLimit" value="2" />&ndash;&gt;-->
+        <!--&lt;!&ndash;<property name="receiveTimeout" value="10000" />&ndash;&gt;-->
 
-    </bean>
+    <!--</bean>-->
 
 </beans>
