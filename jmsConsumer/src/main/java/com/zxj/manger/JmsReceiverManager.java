@@ -46,8 +46,14 @@ public class JmsReceiverManager {
     private static int queueSize = 1;
 
     private JmsReceiverManager(){
-
+        ApplicationContext ctx = new ClassPathXmlApplicationContext("applicationContext-db.xml");
+        ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext-jms.xml");
+        sqlDao = (SqlDao)ctx.getBean("sqlDao");
+        connectionFactory = (ConnectionFactory) context.getBean("pooledConnectionFactory");
         try {
+            connection = connectionFactory.createConnection();
+            connection.start();
+
             init();
         } catch (IOException e) {
             logger.error(e);
@@ -56,19 +62,17 @@ public class JmsReceiverManager {
         }
     }
 
+    /**
+     * 初始化队列以及消费者
+     * @throws IOException
+     * @throws JMSException
+     */
     public void init() throws IOException, JMSException {
-        ApplicationContext ctx = new ClassPathXmlApplicationContext("applicationContext-db.xml");
-        ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext-jms.xml");
-        sqlDao = (SqlDao)ctx.getBean("sqlDao");
-        connectionFactory = (ConnectionFactory) context.getBean("pooledConnectionFactory");
-        props = PropertiesLoaderUtils.loadAllProperties("jms.properties");
-//            connectionFactory = new ActiveMQConnectionFactory(ActiveMQConnection.DEFAULT_USER,
-//                    ActiveMQConnection.DEFAULT_PASSWORD,
-//                    props.getProperty("jms_server"));
+        destinations.clear();
+        consumers.clear();
 
-        connection = connectionFactory.createConnection();
-        connection.start();
-//            session = connection.createSession(Boolean.FALSE, Session.AUTO_ACKNOWLEDGE);
+        props = PropertiesLoaderUtils.loadAllProperties("jms.properties");
+
         queueSize = Integer.valueOf(props.getProperty("queueSize"));
 
         for (int i = 1; i <= queueSize; i++) {
@@ -78,8 +82,6 @@ public class JmsReceiverManager {
             consumers.add(session.createConsumer(queue));
         }
     }
-
-    ;
 
     public void setListeners() throws JMSException {
         if (CollectionUtils.isEmpty(this.consumers)){
@@ -233,7 +235,7 @@ public class JmsReceiverManager {
             public void run() {
                 try {
                     sqlDao.updateEmps(updateData);
-                }catch (Exception e){
+                } catch (Exception e) {
 
                     //TODO 这里保存失败可以做备份处理
                 }
