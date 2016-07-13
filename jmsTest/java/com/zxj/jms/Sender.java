@@ -351,7 +351,7 @@ public class Sender {
 
         Integer startIndex = 0;
         Integer endIndex = 0;
-        Integer pageSize = JMSConstants.BATCH_SIZE;//每次查询一万条
+        Integer pageSize = JMSConstants.getBatchSize();//每次查询一万条
 
         final List<Integer> ids = new ArrayList<Integer>();
         int count = -1;
