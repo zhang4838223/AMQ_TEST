@@ -85,6 +85,18 @@ http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
         </property>
     </bean>
 
+    <bean id="autoProxyCreator" class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" />
+
+    <bean id="aspectJExpressionPointcutAdvisor" class="org.springframework.aop.aspectj.AspectJExpressionPointcutAdvisor">
+        <property name="advice">
+            <ref bean="txInterceptor" />
+        </property>
+        <property name="expression">
+            <value><![CDATA[execution(* com.zxj..*.*ServiceImpl.*(..)) && @within(org.springframework.stereotype.Service) &&
+			(execution(* create*(..)) || execution(* check*(..)) || execution(* delete*(..)) || execution(* update*(..)) || execution(* save*(..)))]]></value>
+        </property>
+    </bean>
+
     <bean id="emplyoeeDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
         <property name="mapperInterface"
                   value="com.zxj.dao.EmployeeDao" />
