@@ -43,7 +43,7 @@
     <bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
         <!-- 这个connectionFactory对应的是我们定义的Spring提供的那个ConnectionFactory对象 -->
         <property name="connectionFactory" ref="pooledConnectionFactory" />
-        <property name="defaultDestination" ref="queueDestination"></property>
+        <!--<property name="defaultDestination" ref="queueDestination"></property>-->
 
         <property name="pubSubDomain" value="false" />
         <property name="explicitQosEnabled" value="true" />
@@ -51,72 +51,72 @@
         <!--<property name="receiveTimeout" value="0" />-->
     </bean>
     <!-- Spring提供的JMS工具类，它可以进行消息发送、接收等 -->
-    <bean id="jmsTemplate1" class="org.springframework.jms.core.JmsTemplate">
-        <!-- 这个connectionFactory对应的是我们定义的Spring提供的那个ConnectionFactory对象 -->
-        <property name="connectionFactory" ref="pooledConnectionFactory" />
-        <property name="defaultDestination" ref="queueDestination1"></property>
-        <!--<property name="receiveTimeout" value="0" />-->
-    </bean>
-    <!-- Spring提供的JMS工具类，它可以进行消息发送、接收等 -->
-    <bean id="jmsTemplate2" class="org.springframework.jms.core.JmsTemplate">
-        <!-- 这个connectionFactory对应的是我们定义的Spring提供的那个ConnectionFactory对象 -->
-        <property name="connectionFactory" ref="pooledConnectionFactory" />
-        <property name="defaultDestination" ref="queueDestination2"></property>
-        <!--<property name="receiveTimeout" value="0" />-->
-    </bean>
-    <!-- Spring提供的JMS工具类，它可以进行消息发送、接收等 -->
-    <bean id="jmsTemplate3" class="org.springframework.jms.core.JmsTemplate">
-        <!-- 这个connectionFactory对应的是我们定义的Spring提供的那个ConnectionFactory对象 -->
-        <property name="connectionFactory" ref="pooledConnectionFactory" />
-        <property name="defaultDestination" ref="queueDestination3"></property>
-        <!--<property name="receiveTimeout" value="0" />-->
-    </bean>
+    <!--<bean id="jmsTemplate1" class="org.springframework.jms.core.JmsTemplate">-->
+        <!--&lt;!&ndash; 这个connectionFactory对应的是我们定义的Spring提供的那个ConnectionFactory对象 &ndash;&gt;-->
+        <!--<property name="connectionFactory" ref="pooledConnectionFactory" />-->
+        <!--<property name="defaultDestination" ref="queueDestination1"></property>-->
+        <!--&lt;!&ndash;<property name="receiveTimeout" value="0" />&ndash;&gt;-->
+    <!--</bean>-->
+    <!--&lt;!&ndash; Spring提供的JMS工具类，它可以进行消息发送、接收等 &ndash;&gt;-->
+    <!--<bean id="jmsTemplate2" class="org.springframework.jms.core.JmsTemplate">-->
+        <!--&lt;!&ndash; 这个connectionFactory对应的是我们定义的Spring提供的那个ConnectionFactory对象 &ndash;&gt;-->
+        <!--<property name="connectionFactory" ref="pooledConnectionFactory" />-->
+        <!--<property name="defaultDestination" ref="queueDestination2"></property>-->
+        <!--&lt;!&ndash;<property name="receiveTimeout" value="0" />&ndash;&gt;-->
+    <!--</bean>-->
+    <!--&lt;!&ndash; Spring提供的JMS工具类，它可以进行消息发送、接收等 &ndash;&gt;-->
+    <!--<bean id="jmsTemplate3" class="org.springframework.jms.core.JmsTemplate">-->
+        <!--&lt;!&ndash; 这个connectionFactory对应的是我们定义的Spring提供的那个ConnectionFactory对象 &ndash;&gt;-->
+        <!--<property name="connectionFactory" ref="pooledConnectionFactory" />-->
+        <!--<property name="defaultDestination" ref="queueDestination3"></property>-->
+        <!--&lt;!&ndash;<property name="receiveTimeout" value="0" />&ndash;&gt;-->
+    <!--</bean>-->
 
     <!-- Spring提供的JMS工具类，它可以进行消息发送、接收等
      接收Consumer的响应
      -->
-    <bean id="recTemplate" class="org.springframework.jms.core.JmsTemplate">
-        <!-- 这个connectionFactory对应的是我们定义的Spring提供的那个ConnectionFactory对象 -->
-        <property name="connectionFactory" ref="pooledConnectionFactory" />
-        <property name="defaultDestination" ref="resDestination"></property>
-        <!--<property name="receiveTimeout" value="0" />-->
-    </bean>
-    <!--这个是队列目的地，点对点的-->
-    <bean id="queueDestination" class="org.apache.activemq.command.ActiveMQQueue">
-        <constructor-arg>
-            <value>monkey</value>
-        </constructor-arg>
-    </bean>
-    <!--这个是队列目的地，点对点的-->
-    <bean id="queueDestination1" class="org.apache.activemq.command.ActiveMQQueue">
-        <constructor-arg>
-            <value>monkey1</value>
-        </constructor-arg>
-    </bean>
-    <!--这个是队列目的地，点对点的-->
-    <bean id="queueDestination2" class="org.apache.activemq.command.ActiveMQQueue">
-        <constructor-arg>
-            <value>monkey2</value>
-        </constructor-arg>
-    </bean>
-    <!--这个是队列目的地，点对点的-->
-    <bean id="queueDestination3" class="org.apache.activemq.command.ActiveMQQueue">
-        <constructor-arg>
-            <value>monkey3</value>
-        </constructor-arg>
-    </bean>
+    <!--<bean id="recTemplate" class="org.springframework.jms.core.JmsTemplate">-->
+        <!--&lt;!&ndash; 这个connectionFactory对应的是我们定义的Spring提供的那个ConnectionFactory对象 &ndash;&gt;-->
+        <!--<property name="connectionFactory" ref="pooledConnectionFactory" />-->
+        <!--<property name="defaultDestination" ref="resDestination"></property>-->
+        <!--&lt;!&ndash;<property name="receiveTimeout" value="0" />&ndash;&gt;-->
+    <!--</bean>-->
+    <!--&lt;!&ndash;这个是队列目的地，点对点的&ndash;&gt;-->
+    <!--<bean id="queueDestination" class="org.apache.activemq.command.ActiveMQQueue">-->
+        <!--<constructor-arg>-->
+            <!--<value>monkey</value>-->
+        <!--</constructor-arg>-->
+    <!--</bean>-->
+    <!--&lt;!&ndash;这个是队列目的地，点对点的&ndash;&gt;-->
+    <!--<bean id="queueDestination1" class="org.apache.activemq.command.ActiveMQQueue">-->
+        <!--<constructor-arg>-->
+            <!--<value>monkey1</value>-->
+        <!--</constructor-arg>-->
+    <!--</bean>-->
+    <!--&lt;!&ndash;这个是队列目的地，点对点的&ndash;&gt;-->
+    <!--<bean id="queueDestination2" class="org.apache.activemq.command.ActiveMQQueue">-->
+        <!--<constructor-arg>-->
+            <!--<value>monkey2</value>-->
+        <!--</constructor-arg>-->
+    <!--</bean>-->
+    <!--&lt;!&ndash;这个是队列目的地，点对点的&ndash;&gt;-->
+    <!--<bean id="queueDestination3" class="org.apache.activemq.command.ActiveMQQueue">-->
+        <!--<constructor-arg>-->
+            <!--<value>monkey3</value>-->
+        <!--</constructor-arg>-->
+    <!--</bean>-->
 
-    <!--这个是队列目的地，点对点的-->
-    <bean id="resDestination" class="org.apache.activemq.command.ActiveMQQueue">
-        <constructor-arg>
-            <value>response</value>
-        </constructor-arg>
-    </bean>
+    <!--&lt;!&ndash;这个是队列目的地，点对点的&ndash;&gt;-->
+    <!--<bean id="resDestination" class="org.apache.activemq.command.ActiveMQQueue">-->
+        <!--<constructor-arg>-->
+            <!--<value>response</value>-->
+        <!--</constructor-arg>-->
+    <!--</bean>-->
 
-    <!--这个是主题目的地，一对多的-->
-    <bean id="topicDestination" class="org.apache.activemq.command.ActiveMQTopic">
-        <constructor-arg value="topic01"/>
-    </bean>
+    <!--&lt;!&ndash;这个是主题目的地，一对多的&ndash;&gt;-->
+    <!--<bean id="topicDestination" class="org.apache.activemq.command.ActiveMQTopic">-->
+        <!--<constructor-arg value="topic01"/>-->
+    <!--</bean>-->
 
     <!-- 任务执行器 -->
     <bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor"/>
