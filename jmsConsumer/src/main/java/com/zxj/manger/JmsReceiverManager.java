@@ -44,6 +44,8 @@ public class JmsReceiverManager {
     private Properties props = null;
     //默认队列数量
     private static int queueSize = 1;
+    //默认每个队列的消费者数量
+    private static int consumerSize = 1;
 
     private JmsReceiverManager(){
         ApplicationContext ctx = new ClassPathXmlApplicationContext("applicationContext-db.xml");
@@ -74,12 +76,25 @@ public class JmsReceiverManager {
         props = PropertiesLoaderUtils.loadAllProperties("jms.properties");
 
         queueSize = Integer.valueOf(props.getProperty("queueSize"));
+        consumerSize = Integer.valueOf(props.getProperty("consumerSize"));
+
+        if (consumerSize <= 0){
+            consumerSize = 1;
+        }
+
+        if (queueSize <= 0){
+            queueSize = 1;
+        }
 
         for (int i = 1; i <= queueSize; i++) {
             Session session = connection.createSession(Boolean.FALSE, Session.AUTO_ACKNOWLEDGE);
+            logger.warn("create queue --->"+("queue_" + i));
             Destination queue = session.createQueue("queue_" + i);
             destinations.add(queue);
-            consumers.add(session.createConsumer(queue));
+
+            for (int j = 0; j < consumerSize; j++) {
+                consumers.add(session.createConsumer(queue));
+            }
         }
     }
 
@@ -90,9 +105,11 @@ public class JmsReceiverManager {
         }
 
         for (int i = 0, j = consumers.size(); i < j; i++) {
+
+            final int k = i;
             consumers.get(i).setMessageListener(new MessageListener() {
                 public void onMessage(Message message) {
-                    System.out.println("listener[0000] is running!");
+                    System.out.println("listener["+k+"] is running!");
                     TextMessage msg = (TextMessage) message;
                     String text = null;
                     try {
