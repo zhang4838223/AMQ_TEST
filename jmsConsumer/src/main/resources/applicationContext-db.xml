@@ -29,6 +29,7 @@ http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
         <property name="password"><value>${jdbc.password}</value></property>
         <property name="maxActive"><value>${jdbc.maxActive}</value></property>
         <property name="maxWait"><value>${jdbc.maxWait}</value></property>
+        <property name="accessToUnderlyingConnectionAllowed"><value>true</value></property>
         <property name="maxIdle"><value>${jdbc.maxIdle}</value></property>
         <property name="initialSize"><value>${jdbc.initSize}</value></property>
         <property name="removeAbandoned"><value>true</value></property>

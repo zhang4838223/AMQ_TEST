@@ -1,10 +1,19 @@
 package com.zxj.model;
 
+import oracle.jdbc.OracleTypes;
+import oracle.jpub.runtime.MutableStruct;
+import oracle.sql.Datum;
+import oracle.sql.ORAData;
+import oracle.sql.ORADataFactory;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Date;
 
 /**
  * Created by zhang4838223 on 2016/7/1.
  */
+//public class Emp implements ORAData {
 public class Emp {
 
     private int empno;
@@ -12,12 +21,21 @@ public class Emp {
     private String job;
     private int mgr;
     private Date hiredate;
-    private Double sal;
-    private Double comm;
+    private double sal;
+    private double comm;
     private int deptno;
     private int state;
 
+//    public static final String _ORACLE_TYPE_NAME = "BUT_UKBNOV_EMP_REC";
+//    static int[] _sqlType = { OracleTypes.NUMBER, OracleTypes.LONGVARCHAR, OracleTypes.LONGVARCHAR,
+//                    OracleTypes.NUMBER, OracleTypes.DATE, OracleTypes.NUMBER,
+//            OracleTypes.NUMBER,OracleTypes.NUMBER,OracleTypes.INTEGER
+//                            };
+//    static ORADataFactory[] _factory = new ORADataFactory[_sqlType.length];
+//
+//    static MutableStruct _struct = new MutableStruct(new Object[_sqlType.length], _sqlType, _factory);
     public Emp() {
+
     }
 
     public Emp(int empno, String ename, String job, int mgr, Date hiredate, Double sal, Double comm, int deptno, int state) {
@@ -118,4 +136,17 @@ public class Emp {
     public void setState(int state) {
         this.state = state;
     }
+
+//    public Datum toDatum(Connection conn) throws SQLException {
+//        _struct.setAttribute(0, this.empno);
+//        _struct.setAttribute(1, this.ename);
+//        _struct.setAttribute(2, this.job);
+//        _struct.setAttribute(3, this.mgr);
+//        _struct.setAttribute(4, this.hiredate);
+//        _struct.setAttribute(5, this.sal);
+//        _struct.setAttribute(6, this.comm);
+//        _struct.setAttribute(7, this.deptno);
+//        _struct.setAttribute(8, this.state);
+//        return _struct.toDatum(conn, _ORACLE_TYPE_NAME);
+//    }
 }

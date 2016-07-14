@@ -16,11 +16,12 @@ public class Employee implements Serializable{
     private Double sal;
     private Double comm;
     private int deptno;
+    private int state;
 
     public Employee() {
     }
 
-    public Employee(int empno, String ename, String job, int mgr, Date hiredate, Double sal, Double comm, int deptno) {
+    public Employee(int empno, String ename, String job, int mgr, Date hiredate, Double sal, Double comm, int deptno, int state) {
         this.empno = empno;
         this.ename = ename;
         this.job = job;
@@ -29,6 +30,7 @@ public class Employee implements Serializable{
         this.sal = sal;
         this.comm = comm;
         this.deptno = deptno;
+        this.state = state;
     }
 
     public int getEmpno() {
@@ -106,6 +108,15 @@ public class Employee implements Serializable{
                 ", sal=" + sal +
                 ", comm='" + comm + '\'' +
                 ", deptno=" + deptno +
+                ", state=" + state +
                 '}';
+    }
+
+    public int getState() {
+        return state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
     }
 }

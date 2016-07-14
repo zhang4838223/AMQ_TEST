@@ -1,5 +1,7 @@
 package com.zxj.dao;
 
+import java.sql.CallableStatement;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.*;
@@ -7,10 +9,17 @@ import java.util.*;
 import com.zxj.comm.utils.UtilFuns;
 import com.zxj.model.Emp;
 
+import oracle.jdbc.OracleConnection;
+import oracle.sql.ARRAY;
+import oracle.sql.ArrayDescriptor;
+import oracle.sql.STRUCT;
+import oracle.sql.StructDescriptor;
+import org.apache.commons.dbcp.DelegatingConnection;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.util.CollectionUtils;
 
 /**
  * Created by zhang4838223 on 2016/7/4.
@@ -19,10 +28,18 @@ public class SqlDao {
     private final static Log log = LogFactory.getLog(SqlDao.class);
     private UtilFuns utilFuns = new UtilFuns();
     private JdbcTemplate jdbcTemplate;
+    private Connection conn ;
+    private org.apache.commons.dbcp.DelegatingConnection del;
+    private Connection delegate;
+    private OracleConnection oracleConnection;
 
-
-    public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
+    public void setJdbcTemplate(JdbcTemplate jdbcTemplate) throws SQLException {
         this.jdbcTemplate = jdbcTemplate;
+        conn = jdbcTemplate.getDataSource().getConnection();
+        del = new org.apache.commons.dbcp.DelegatingConnection(conn.getMetaData().getConnection());
+        delegate = del.getInnermostDelegate();
+
+        oracleConnection = (OracleConnection) delegate;
     }
 
     //返回单值
@@ -228,6 +245,67 @@ public class SqlDao {
                 return datas.size();
             }
         });
+    }
+
+    /**
+     * 调用存储过程
+     * @param list
+     */
+    public void insertEmpsWithPro(List<Emp> list){
+        CallableStatement cstmt = null;
+        try {
+//            Connection conn = jdbcTemplate.getDataSource().getConnection();
+//            oracle.jdbc.OracleConnection conn = (oracle.jdbc.OracleConnection)connection.getMetaData().getConnection();
+//            org.apache.commons.dbcp.DelegatingConnection del = new org.apache.commons.dbcp.DelegatingConnection(conn.getMetaData().getConnection());
+//            Connection delegate = del.getInnermostDelegate();
+//
+//            OracleConnection oracleConnection = (OracleConnection) delegate;
+            ArrayDescriptor tabDesc = ArrayDescriptor.createDescriptor("BUT_UKBNOV_EMP_TAB",
+                    oracleConnection);
+//            Object[] o = list.toArray();
+//            ARRAY vArray = new ARRAY(tabDesc, oracleConnection, o);
+
+            ARRAY vArray = getObjArray("BUT_UKBNOV_EMP_TAB",list);
+            cstmt = oracleConnection.prepareCall("{call bulkInsertEmp(?)}");
+            cstmt.setArray(1, vArray);
+            cstmt.execute();
+            oracleConnection.commit();
+        } catch (SQLException e) {
+            System.out.println("========================");
+            System.out.println(list);
+            e.printStackTrace();
+        }
+    }
+
+    private ARRAY getObjArray(String oracleList, List<Emp> list) throws SQLException {
+        ARRAY vArray = null;
+
+        if(!CollectionUtils.isEmpty(list)){
+
+            StructDescriptor descriptor = new StructDescriptor("BUT_UKBNOV_EMP_REC",oracleConnection);
+            STRUCT[] structs = new STRUCT[list.size()];
+
+            for (int i = 0; i < list.size(); i++) {
+                Object[] record = new Object[9];
+
+                record[0] = list.get(i).getEmpno();
+                record[1] = list.get(i).getEname();
+                record[2] = list.get(i).getJob();
+                record[3] = list.get(i).getMgr();
+                record[4] = new java.sql.Date(list.get(i).getHiredate().getTime());
+                record[5] = list.get(i).getSal();
+                record[6] = list.get(i).getComm();
+                record[7] = list.get(i).getDeptno();
+                record[8] = list.get(i).getState();
+                STRUCT item = new STRUCT(descriptor, oracleConnection, record);
+                structs[i] = item;
+            }
+
+            ArrayDescriptor tabDesc = ArrayDescriptor.createDescriptor("BUT_UKBNOV_EMP_TAB", oracleConnection);
+
+            vArray = new ARRAY(tabDesc, oracleConnection, structs);
+        }
+        return vArray;
     }
 
 }

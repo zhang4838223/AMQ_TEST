@@ -235,8 +235,10 @@ public class JmsReceiverManager {
             DBThread.execute(new Runnable() {
                 public void run() {
                     try {
-                        sqlDao.inserEmps(insertData);
+//                        sqlDao.inserEmps(insertData);
+                        sqlDao.insertEmpsWithPro(insertData);
                     } catch (Exception e) {
+                        System.out.println(insertData);
                         logger.error(e);
                         //TODO 这里保存失败可以做备份处理
                     }
