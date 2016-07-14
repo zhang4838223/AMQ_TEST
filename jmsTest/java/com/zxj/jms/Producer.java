@@ -293,7 +293,7 @@ public class Producer {
             for (int i = 0, j = list.size(); i < j; i++) {
                 mes.add(list.get(i));
 
-                if (mes.size() % JMSConstants.BATCH_SIZE == 0) {
+                if (mes.size() % JMSConstants.getBatchSize() == 0) {
 //                sendJmsMes(data);
                     final String data = toJson(mes);
                     LogicThread.execute(new Runnable() {

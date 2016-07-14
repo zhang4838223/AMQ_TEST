@@ -68,7 +68,8 @@
     <orderEntry type="library" name="Maven: memcached_client:java_memcached_client:3.0.2" level="project" />
     <orderEntry type="library" name="Maven: commons-io:commons-io:2.4" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.aspectj:aspectjrt:1.7.2" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.aspectj:aspectjweaver:1.7.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.aspectj:aspectjweaver:1.8.6" level="project" />
     <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.2.2" level="project" />
+    <orderEntry type="library" name="Maven: cglib:cglib-nodep:2.1_3" level="project" />
   </component>
 </module>

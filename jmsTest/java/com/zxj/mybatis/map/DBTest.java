@@ -23,7 +23,7 @@ public class DBTest {
 
         Integer startIndex = 0;
         Integer endIndex = 0;
-        Integer pageSize = JMSConstants.BATCH_SIZE;
+        Integer pageSize = JMSConstants.getBatchSize();
 
         map.put("state", 1);
         Integer count = dao.findTotalCountNotSend(map);
