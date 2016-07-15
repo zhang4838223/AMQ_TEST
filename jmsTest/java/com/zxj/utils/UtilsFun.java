@@ -6,6 +6,7 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
+import java.text.MessageFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -1524,5 +1525,22 @@ public class UtilsFun {
     }
     public String getClassRootPath(){
         return this.getClass().getResource("/").getPath();
+    }
+
+    /**
+     * 格式化字符串
+     *
+     * @param msg
+     * @param paramers
+     * @return
+     */
+    public static String format(String msg, Object... paramers) {
+        Object[] strParamers = new Object[paramers.length];
+        for (int i = 0; i < paramers.length; i++) {
+            Object paramer = paramers[i];
+            strParamers[i] = paramer == null ? "NULL" : paramer.toString();
+        }
+
+        return MessageFormat.format(msg, strParamers);
     }
 }

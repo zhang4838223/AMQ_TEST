@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tables>
+    <table name="emp">
+        <operate>
+            <queryCount>
+                SELECT count(1) FROM emp WHERE STATE <![CDATA[ <> ]]> 1
+            </queryCount>
+            <update>UPDATE emp SET STATE = 1 WHERE EMPNO = {0}</update>
+            <query>
+                SELECT * FROM ( SELECT A.*, ROWNUM RN
+                FROM (
+                    SELECT * FROM EMP
+                    WHERE state <![CDATA[ <> ]]> 1 ORDER BY EMPNO
+                ) A WHERE ROWNUM <![CDATA[ <= ]]> {0} ) WHERE RN >= {1}
+            </query>
+        </operate>
+        <columns>
+            <column type="1">EMPNO</column>
+            <column type="2">ENAME</column>
+            <column type="2">JOB</column>
+            <column type="1">MGR</column>
+            <column type="4">HIREDATE</column>
+            <column type="3">SAL</column>
+            <column type="3">COMM</column>
+            <column type="1">DEPTNO</column>
+            <column type="1">STATE</column>
+        </columns>
+    </table>
+
+    <table name="dept">
+        <operate>
+            <queryCount>
+                SELECT count(1) FROM dept WHERE STATE <![CDATA[ <> ]]> 1
+            </queryCount>
+            <update>UPDATE dept SET STATE = 1 WHERE DEPTNO = {0}</update>
+            <query>
+                SELECT * FROM ( SELECT A.*, ROWNUM RN
+                FROM (
+                SELECT * FROM dept
+                WHERE state <![CDATA[ <> ]]> 1 ORDER BY DEPTNO
+                ) A WHERE ROWNUM <![CDATA[ <= ]]> {0} ) WHERE RN >= {1}
+            </query>
+        </operate>
+        <columns>
+            <column type="1">DEPTNO</column>
+            <column type="2">DNAME</column>
+            <column type="2">LOC</column>
+        </columns>
+    </table>
+</tables>

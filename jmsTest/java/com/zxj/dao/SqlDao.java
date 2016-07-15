@@ -1,10 +1,14 @@
 package com.zxj.dao;
 
+import com.zxj.comm.EColumn;
+import com.zxj.comm.ERecord;
 import com.zxj.mybatis.map.Employee;
 import com.zxj.utils.UtilsFun;
 import org.apache.log4j.Logger;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ResultSetExtractor;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -248,4 +252,33 @@ public class SqlDao {
         });
     }
 
+    public int queryCountNotSend(String sql){
+        int result = jdbcTemplate.queryForObject(sql, Integer.class);
+        return result;
+    }
+
+    public List<ERecord> queryPageList(String sql, final List<EColumn> columns){
+
+        jdbcTemplate.query(sql, new ResultSetExtractor() {
+
+            public Object extractData(ResultSet resultSet) throws SQLException, DataAccessException {
+                for (int i = 0, j = columns.size(); i < j; i++){
+                    //ResultSet从1开始
+                    EColumn col = columns.get(i);
+                    switch (col.getType()) {
+                        case 1:
+                            break;
+                        case 2:
+                            break;
+                        case 3:
+                            break;
+                        case 4:
+                            break;
+                    }
+                }
+                return null;
+            }
+        });
+        return null;
+    }
 }
