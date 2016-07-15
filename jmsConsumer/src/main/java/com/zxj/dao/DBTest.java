@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class DBTest {
 
-    public static void main(String[] args){
+    public static void main(String[] args) throws SQLException {
         ApplicationContext ctx = new ClassPathXmlApplicationContext("applicationContext-db.xml");
         JdbcTemplate jdbcTemplate = (JdbcTemplate)ctx.getBean("jdbcTemplate");
 

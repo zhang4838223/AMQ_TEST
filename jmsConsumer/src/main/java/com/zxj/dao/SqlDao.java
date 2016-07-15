@@ -251,30 +251,16 @@ public class SqlDao {
      * 调用存储过程
      * @param list
      */
-    public void insertEmpsWithPro(List<Emp> list){
+    public void insertEmpsWithPro(List<Emp> list) throws SQLException {
         CallableStatement cstmt = null;
-        try {
-//            Connection conn = jdbcTemplate.getDataSource().getConnection();
-//            oracle.jdbc.OracleConnection conn = (oracle.jdbc.OracleConnection)connection.getMetaData().getConnection();
-//            org.apache.commons.dbcp.DelegatingConnection del = new org.apache.commons.dbcp.DelegatingConnection(conn.getMetaData().getConnection());
-//            Connection delegate = del.getInnermostDelegate();
-//
-//            OracleConnection oracleConnection = (OracleConnection) delegate;
             ArrayDescriptor tabDesc = ArrayDescriptor.createDescriptor("BUT_UKBNOV_EMP_TAB",
                     oracleConnection);
-//            Object[] o = list.toArray();
-//            ARRAY vArray = new ARRAY(tabDesc, oracleConnection, o);
 
             ARRAY vArray = getObjArray("BUT_UKBNOV_EMP_TAB",list);
             cstmt = oracleConnection.prepareCall("{call bulkInsertEmp(?)}");
             cstmt.setArray(1, vArray);
             cstmt.execute();
             oracleConnection.commit();
-        } catch (SQLException e) {
-            System.out.println("========================");
-            System.out.println(list);
-            e.printStackTrace();
-        }
     }
 
     private ARRAY getObjArray(String oracleList, List<Emp> list) throws SQLException {
