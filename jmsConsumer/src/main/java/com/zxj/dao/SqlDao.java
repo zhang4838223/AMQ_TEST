@@ -301,7 +301,8 @@ public class SqlDao {
                 structs[i] = item;
             }
 
-            ArrayDescriptor tabDesc = ArrayDescriptor.createDescriptor("BUT_UKBNOV_EMP_TAB", oracleConnection);
+//            ArrayDescriptor tabDesc = ArrayDescriptor.createDescriptor("BUT_UKBNOV_EMP_TAB", oracleConnection);
+            ArrayDescriptor tabDesc = ArrayDescriptor.createDescriptor(oracleList, oracleConnection);
 
             vArray = new ARRAY(tabDesc, oracleConnection, structs);
         }

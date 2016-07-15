@@ -1,5 +1,9 @@
 package com.zxj.comm;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicLong;
@@ -9,6 +13,7 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class DBThread {
 
+    private final static Log logger = LogFactory.getLog(DBThread.class);
     public static final int DB_THREAD_NUM = 8;
 
     protected static ExecutorService executor = Executors
@@ -33,7 +38,7 @@ public class DBThread {
             public void run() {
                 try {
                     if (dbTask != null) {
-                        System.out.println("the dbtask num is: "+ queueSize.get());
+                        logger.warn("the dbtask num is: " + queueSize.get());
                         dbTask.run();
                     }
                 } catch (Exception e) {
