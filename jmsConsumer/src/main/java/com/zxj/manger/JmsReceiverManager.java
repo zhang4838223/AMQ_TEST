@@ -1,9 +1,9 @@
 package com.zxj.manger;
 
 import com.google.gson.reflect.TypeToken;
-import com.zxj.comm.DBThread;
-import com.zxj.comm.LogicThread;
+import com.zxj.comm.*;
 import com.zxj.comm.utils.TextUtils;
+import com.zxj.comm.utils.XMLParseUtil;
 import com.zxj.dao.SqlDao;
 import com.zxj.model.Emp;
 import org.apache.activemq.ActiveMQConnection;
@@ -19,6 +19,7 @@ import javax.jms.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -196,9 +197,9 @@ public class JmsReceiverManager {
         if (text == null || text.length() <= 3)
             return;
 
-        List<Emp> emps = null;
+        Map<String,List<ERecord>> elements = null;
         try {
-            emps = TextUtils.gson.fromJson(text, new TypeToken<List<Emp>>() {
+            elements = TextUtils.gson.fromJson(text, new TypeToken<Map<String,List<ERecord>>>() {
             }.getType());
         }catch(Exception e){
             System.out.println("error message: " + text);
@@ -206,29 +207,63 @@ public class JmsReceiverManager {
             logger.error(e);
         }
 
-        if (CollectionUtils.isEmpty(emps)){
+        if (CollectionUtils.isEmpty(elements)){
             return;
         }
 
-        System.out.println("receive mes size: "+ emps.size());
-        final List<Emp> insertData = new ArrayList<Emp>();
-        final List<Emp> updateData = new ArrayList<Emp>();
+        List<ERecord> value = null;
+        String tabName = null;
 
-        for (int i = 0, j = emps.size(); i < j; i++) {
-            int state = emps.get(i).getState();
-            switch (state){
-                case 0://新增
-                    insertData.add(emps.get(i));
+        for (Map.Entry<String, List<ERecord>> en : elements.entrySet()) {
+            tabName = en.getKey();
+            value = en.getValue();
+            System.out.println("receive mes: "+tabName+" size: "+ value.size());
+        }
+
+        if (CollectionUtils.isEmpty(value)){
+            System.out.println("empty message: " + text);
+            logger.warn(text);
+            return;
+        }
+
+        if (value.size() < 10){
+            System.out.println("-----"+text);
+        }
+
+        final List<ERecord> insertData = new ArrayList<ERecord>();
+        final List<ERecord> updateData = new ArrayList<ERecord>();
+
+        boolean flag = false;
+        //遍历每一条记录
+        for (int i = 0, j = value.size(); i < j; i++) {
+            ERecord record = value.get(i);
+            //遍历记录的所有列
+            for (int k = 0, h = record.getColumns().size(); k < h; k++) {
+                EColumn col = record.getColumns().get(k);
+
+                if ("STATE".equals(col.getName())) {
+                    int state = 0;
+                    String value1 = null;
+                    value1 = col.getValue();
+                    state = Integer.valueOf(value1);
+//                    int state =1;
+                    switch (state){
+                        case 0://新增
+                            insertData.add(record);
+                            break;
+                        case 2://修改
+                            updateData.add(record);
+                            break;
+                    }
                     break;
-                case 2://修改
-                    updateData.add(emps.get(i));
-                    break;
+                }
             }
         }
 
         /*ApplicationContext ctx = new ClassPathXmlApplicationContext("applicationContext-db.xml");
         final SqlDao dao = (SqlDao)ctx.getBean("sqlDao");*/
 
+        final ETable etable = XMLParseUtil.getInstance().getEtableByName(tabName);
         logger.info("insert data size:" + insertData.size());
         logger.info("updateData data size:" + updateData.size());
         if (!CollectionUtils.isEmpty(insertData)){
@@ -236,7 +271,7 @@ public class JmsReceiverManager {
                 public void run() {
                     try {
 //                        sqlDao.inserEmps(insertData);
-                        sqlDao.insertEmpsWithPro(insertData);
+                        sqlDao.inserElements(insertData, etable.getInsertSql());
                     } catch (Exception e) {
                         System.out.println(insertData);
                         logger.error(e);
@@ -253,7 +288,7 @@ public class JmsReceiverManager {
         DBThread.execute(new Runnable() {
             public void run() {
                 try {
-                    sqlDao.updateEmps(updateData);
+                    sqlDao.updateElements(updateData, etable.getUpdateSqlA());
                 } catch (Exception e) {
 
                     //TODO 这里保存失败可以做备份处理
@@ -261,6 +296,78 @@ public class JmsReceiverManager {
             }
         });
     }
+
+    /*private void batchSaveDataAsyn(String text) {
+
+            if (text == null || text.length() <= 3)
+                return;
+
+            List<Emp> emps = null;
+            try {
+                emps = TextUtils.gson.fromJson(text, new TypeToken<List<Emp>>() {
+                }.getType());
+            }catch(Exception e){
+                System.out.println("error message: " + text);
+                logger.warn(text);
+                logger.error(e);
+            }
+
+            if (CollectionUtils.isEmpty(emps)){
+                return;
+            }
+
+            System.out.println("receive mes size: "+ emps.size());
+            final List<Emp> insertData = new ArrayList<Emp>();
+            final List<Emp> updateData = new ArrayList<Emp>();
+
+            for (int i = 0, j = emps.size(); i < j; i++) {
+                int state = emps.get(i).getState();
+                switch (state){
+                    case 0://新增
+                        insertData.add(emps.get(i));
+                        break;
+                    case 2://修改
+                        updateData.add(emps.get(i));
+                        break;
+                }
+            }
+
+            *//*ApplicationContext ctx = new ClassPathXmlApplicationContext("applicationContext-db.xml");
+            final SqlDao dao = (SqlDao)ctx.getBean("sqlDao");*//*
+
+            logger.info("insert data size:" + insertData.size());
+            logger.info("updateData data size:" + updateData.size());
+            if (!CollectionUtils.isEmpty(insertData)){
+                DBThread.execute(new Runnable() {
+                    public void run() {
+                        try {
+    //                        sqlDao.inserEmps(insertData);
+                            sqlDao.insertEmpsWithPro(insertData);
+                        } catch (Exception e) {
+                            System.out.println(insertData);
+                            logger.error(e);
+                            //TODO 这里保存失败可以做备份处理
+                        }
+                    }
+                });
+            }
+
+            if (CollectionUtils.isEmpty(updateData)){
+                return;
+            }
+
+            DBThread.execute(new Runnable() {
+                public void run() {
+                    try {
+                        sqlDao.updateEmps(updateData);
+                    } catch (Exception e) {
+
+                        //TODO 这里保存失败可以做备份处理
+                    }
+                }
+            });
+        }
+*/
 
     public void shutDown(){
         if (null != connection){

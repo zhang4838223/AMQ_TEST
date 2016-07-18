@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tables>
+    <table name="emp">
+        <operate>
+            <queryCount>
+                SELECT count(1) FROM emp WHERE STATE <![CDATA[ <> ]]> 1
+            </queryCount>
+            <update>UPDATE emp SET STATE = ? WHERE EMPNO = ?</update>
+            <updateAll>
+                UPDATE EMP SET
+                ENAME = ? ,JOB = ? ,MGR = ? ,
+                HIREDATE = ?, SAL = ?,COMM = ?, DEPTNO = ?,STATE = ?
+                WHERE EMPNO = ?
+            </updateAll>
+            <query>
+                SELECT * FROM ( SELECT A.*, ROWNUM RN
+                FROM (
+                    SELECT * FROM EMP
+                    WHERE state <![CDATA[ <> ]]> 1 ORDER BY EMPNO
+                ) A WHERE ROWNUM <![CDATA[ <= ]]> {0} ) WHERE RN >= {1}
+            </query>
+            <insert>
+                insert into emp(
+                EMPNO,ENAME,JOB,MGR,HIREDATE,SAL,COMM,DEPTNO,STATE
+                )values(
+                ?,?,?,?,?,?,?,?,?
+                )
+            </insert>
+        </operate>
+        <columns>
+            <column type="1">EMPNO</column>
+            <column type="2">ENAME</column>
+            <column type="2">JOB</column>
+            <column type="1">MGR</column>
+            <column type="4">HIREDATE</column>
+            <column type="3">SAL</column>
+            <column type="3">COMM</column>
+            <column type="1">DEPTNO</column>
+            <column type="1">STATE</column>
+        </columns>
+    </table>
+
+    <table name="dept">
+        <operate>
+            <queryCount>
+                SELECT count(1) FROM dept WHERE STATE <![CDATA[ <> ]]> 1
+            </queryCount>
+            <update>UPDATE dept SET STATE = ? WHERE DEPTNO = ?</update>
+            <query>
+                SELECT * FROM ( SELECT A.*, ROWNUM RN
+                FROM (
+                SELECT * FROM dept
+                WHERE state <![CDATA[ <> ]]> 1 ORDER BY DEPTNO
+                ) A WHERE ROWNUM <![CDATA[ <= ]]> {0} ) WHERE RN >= {1}
+            </query>
+            <updateAll>
+                UPDATE dept SET
+                DNAME = ? ,LOC = ? ,STATE = ?
+                WHERE DEPTNO = ?
+            </updateAll>
+            <insert>
+                INSERT INTO dept(
+                DEPTNO,DNAME,LOC,STATE
+                )VALUES(
+                ?,?,?,?
+                )
+            </insert>
+        </operate>
+        <columns>
+            <column type="1">DEPTNO</column>
+            <column type="2">DNAME</column>
+            <column type="2">LOC</column>
+            <column type="1">STATE</column>
+        </columns>
+    </table>
+</tables>

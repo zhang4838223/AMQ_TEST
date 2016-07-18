@@ -1,11 +1,12 @@
 package com.zxj.dao;
 
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.*;
+import java.util.Date;
 
+import com.zxj.comm.Constants;
+import com.zxj.comm.EColumn;
+import com.zxj.comm.ERecord;
 import com.zxj.comm.utils.UtilFuns;
 import com.zxj.model.Emp;
 
@@ -212,7 +213,95 @@ public class SqlDao {
         });
     }
 
-    public void updateEmps(List<Emp> list){
+    public void inserElements(List<ERecord> list, String sql){
+        final List<ERecord> datas = new ArrayList<ERecord>();
+        datas.addAll(list);
+        jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+            public void setValues(PreparedStatement ps, int i) throws SQLException {
+                ERecord record = datas.get(i);
+
+                //遍历每一列并设置参数
+                for (int j = 0, k = record.getColumns().size(); j < k; j++){
+                    EColumn col = record.getColumns().get(j);
+                    switch (col.getType()) {
+                        case Constants.INT:
+                            //TODO 整数类型
+                            ps.setInt(j+1, Integer.valueOf(col.getValue()));
+                            break;
+                        case Constants.STRING:
+                            ps.setString(j+1, String.valueOf(col.getValue()));
+                            break;
+                        case Constants.DOUBLE:
+                            ps.setDouble(j + 1, Double.valueOf(col.getValue()));
+                            break;
+                        case Constants.DATE:
+                            ps.setDate(j + 1, java.sql.Date.valueOf(col.getValue()));
+                            break;
+                    }
+                }
+            }
+
+            public int getBatchSize() {
+                return datas.size();
+            }
+        });
+    }
+
+    public void updateElements(List<ERecord> list, String sql){
+        final List<ERecord> datas = list;
+        jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter()
+        {
+            public void setValues(PreparedStatement ps,int i)throws SQLException
+            {
+                ERecord record = datas.get(i);
+                //遍历每一列并设置参数
+                for (int j = 0, k = record.getColumns().size(); j < k; j++){
+                    EColumn col = record.getColumns().get(j);
+                    //首位是id主键，这里作为更新的条件要设置到最后一个占位符上
+                    if (j == 0){
+                        switch (col.getType()) {
+                            case Constants.INT:
+                                //TODO 整数类型
+                                ps.setInt(k, Integer.valueOf(col.getValue()));
+                                break;
+                            case Constants.STRING:
+                                ps.setString(k, String.valueOf(col.getValue()));
+                                break;
+                            case Constants.DOUBLE:
+                                ps.setDouble(k, Double.valueOf(col.getValue()));
+                                break;
+                            case Constants.DATE:
+                                ps.setDate(k, java.sql.Date.valueOf(col.getValue()));
+                                break;
+                        }
+                    }else {
+                        switch (col.getType()) {
+                            case Constants.INT:
+                                //TODO 整数类型
+                                ps.setInt(j, Integer.valueOf(col.getValue()));
+                                break;
+                            case Constants.STRING:
+                                ps.setString(j, String.valueOf(col.getValue()));
+                                break;
+                            case Constants.DOUBLE:
+                                ps.setDouble(j, Double.valueOf(col.getValue()));
+                                break;
+                            case Constants.DATE:
+                                ps.setDate(j, java.sql.Date.valueOf(col.getValue()));
+                                break;
+                        }
+                    }
+                }
+            }
+
+            public int getBatchSize()
+            {
+                return datas.size();
+            }
+        });
+    }
+
+     public void updateEmps(List<Emp> list){
         String sql="UPDATE EMP SET ENAME = ? ,JOB = ? ,MGR = ? ,HIREDATE = ?, SAL = ?,COMM = ?, DEPTNO = ?,STATE = ? WHERE EMPNO = ?";
         final List<Emp> datas = list;
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter()
@@ -246,6 +335,8 @@ public class SqlDao {
             }
         });
     }
+
+
 
     /**
      * 调用存储过程
