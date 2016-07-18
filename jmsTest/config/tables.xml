@@ -5,7 +5,7 @@
             <queryCount>
                 SELECT count(1) FROM emp WHERE STATE <![CDATA[ <> ]]> 1
             </queryCount>
-            <update>UPDATE emp SET STATE = 1 WHERE EMPNO = {0}</update>
+            <update>UPDATE emp SET STATE = ? WHERE EMPNO = ?</update>
             <query>
                 SELECT * FROM ( SELECT A.*, ROWNUM RN
                 FROM (
@@ -32,7 +32,7 @@
             <queryCount>
                 SELECT count(1) FROM dept WHERE STATE <![CDATA[ <> ]]> 1
             </queryCount>
-            <update>UPDATE dept SET STATE = 1 WHERE DEPTNO = {0}</update>
+            <update>UPDATE dept SET STATE = ? WHERE DEPTNO = ?</update>
             <query>
                 SELECT * FROM ( SELECT A.*, ROWNUM RN
                 FROM (
@@ -45,6 +45,7 @@
             <column type="1">DEPTNO</column>
             <column type="2">DNAME</column>
             <column type="2">LOC</column>
+            <column type="1">STATE</column>
         </columns>
     </table>
 </tables>

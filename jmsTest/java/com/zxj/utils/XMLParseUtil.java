@@ -109,4 +109,21 @@ public class XMLParseUtil {
     public void setEtables(List<ETable> etables) {
         this.etables = etables;
     }
+
+    /**
+     * 许要同步的table数量
+     * @return
+     */
+    public int getEtableSize() {
+        return this.etables.size();
+    }
+    /**
+     * 根据索引获取xml配置的table信息
+     * @return
+     */
+    public ETable getEtableByIndex(int index) {
+        return this.etables.get(index);
+    }
+
+
 }

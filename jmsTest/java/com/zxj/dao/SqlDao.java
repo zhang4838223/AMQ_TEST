@@ -2,6 +2,7 @@ package com.zxj.dao;
 
 import com.zxj.comm.EColumn;
 import com.zxj.comm.ERecord;
+import com.zxj.comm.JMSConstants;
 import com.zxj.mybatis.map.Employee;
 import com.zxj.utils.UtilsFun;
 import org.apache.log4j.Logger;
@@ -252,33 +253,71 @@ public class SqlDao {
         });
     }
 
+    public void updateState(List<Integer> ids, String sql) throws SQLException {
+//        String sql="UPDATE emp SET STATE = ? WHERE EMPNO = ?";
+        final List<Integer> datas = new ArrayList<Integer>();
+        datas.addAll(ids);
+
+        log.info("update id size: "+ datas.size());
+        jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter()
+        {
+            public void setValues(PreparedStatement ps,int i)throws SQLException
+            {
+                ps.setInt(1, 1);//更改发送状态为1
+                ps.setInt(2, datas.get(i));//更改发送状态为1
+            }
+            public int getBatchSize()
+            {
+                return datas.size();
+            }
+        });
+    }
+
+
     public int queryCountNotSend(String sql){
         int result = jdbcTemplate.queryForObject(sql, Integer.class);
         return result;
     }
 
-    public List<ERecord> queryPageList(String sql, final List<EColumn> columns){
+    public List<ERecord> queryPageList(String sql, List<EColumn> col){
+        final List<EColumn> columns = new ArrayList<EColumn>();
+        columns.addAll(col);
+        List<ERecord> recordList =jdbcTemplate.query(sql, new ResultSetExtractor<List<ERecord>>() {
 
-        jdbcTemplate.query(sql, new ResultSetExtractor() {
+            public List<ERecord> extractData(ResultSet resultSet) throws SQLException, DataAccessException {
+                List<ERecord> list = new ArrayList<ERecord>();
 
-            public Object extractData(ResultSet resultSet) throws SQLException, DataAccessException {
-                for (int i = 0, j = columns.size(); i < j; i++){
-                    //ResultSet从1开始
-                    EColumn col = columns.get(i);
-                    switch (col.getType()) {
-                        case 1:
-                            break;
-                        case 2:
-                            break;
-                        case 3:
-                            break;
-                        case 4:
-                            break;
+                while (resultSet.next()) {
+                    ERecord record = new ERecord(new ArrayList<EColumn>());
+//                    System.out.println(resultSet.getInt(1));
+                    //遍历所有列并封装对应类型的值
+                    for (int i = 0, j = columns.size(); i < j; i++) {
+                        //ResultSet从1开始
+                        EColumn col = new EColumn(columns.get(i).getValue(),
+                                columns.get(i).getName(), columns.get(i).getType());
+
+                        switch (col.getType()) {
+                            case JMSConstants.INT:
+                                //TODO 整数类型
+                                col.setValue(String.valueOf(resultSet.getInt(i + 1)));
+                                break;
+                            case JMSConstants.STRING:
+                                col.setValue(String.valueOf(resultSet.getString(i + 1)));
+                                break;
+                            case JMSConstants.DOUBLE:
+                                col.setValue(String.valueOf(resultSet.getDouble(i + 1)));
+                                break;
+                            case JMSConstants.DATE:
+                                col.setValue(String.valueOf(resultSet.getDate(i + 1)));
+                                break;
+                        }
+                        record.getColumns().add(col);
                     }
+                    list.add(record);
                 }
-                return null;
+                return list;
             }
         });
-        return null;
+        return recordList;
     }
 }
