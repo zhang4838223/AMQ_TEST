@@ -2,9 +2,7 @@ package com.zxj.test;
 
 import com.google.gson.Gson;
 import com.zxj.comm.*;
-import com.zxj.dao.EmployeeDao;
 import com.zxj.dao.SqlDao;
-import com.zxj.jms.Producer;
 import com.zxj.utils.UtilsFun;
 import com.zxj.utils.XMLParseUtil;
 import org.apache.commons.logging.Log;
@@ -32,7 +30,6 @@ import java.util.concurrent.TimeUnit;
  * Created by zhang4838223 on 2016/7/18.
  */
 public class SendTest {
-
 
     private final static Log logger = LogFactory.getLog(SendTest.class);
     public static ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext-jms.xml");
