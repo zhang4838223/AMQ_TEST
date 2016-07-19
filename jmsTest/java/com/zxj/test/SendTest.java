@@ -5,7 +5,6 @@ import com.zxj.comm.*;
 import com.zxj.dao.EmployeeDao;
 import com.zxj.dao.SqlDao;
 import com.zxj.jms.Producer;
-import com.zxj.mybatis.map.Employee;
 import com.zxj.utils.UtilsFun;
 import com.zxj.utils.XMLParseUtil;
 import org.apache.commons.logging.Log;
@@ -35,16 +34,22 @@ import java.util.concurrent.TimeUnit;
 public class SendTest {
 
 
-    private final static Log logger = LogFactory.getLog(Producer.class);
+    private final static Log logger = LogFactory.getLog(SendTest.class);
     public static ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext-jms.xml");
     public static JmsTemplate template =(JmsTemplate)context.getBean("jmsTemplate");
     public static ApplicationContext ctx = new ClassPathXmlApplicationContext("applicationContext-database.xml");
-    private static EmployeeDao dao = (EmployeeDao)ctx.getBean("emplyoeeDao");
     private final static SqlDao sqlDao = (SqlDao)ctx.getBean("sqlDao");
 
-    public static void main(String[] args){
-        sendDirecWithMultiQueue();
-        System.out.println("all data is sended");
+    public static void main(String[] args) throws InterruptedException {
+        while (true) {
+            if(DBThread.getQueueSize() > 0){
+                System.out.println("DBThread.getQueueSize() = " + DBThread.getQueueSize());
+                TimeUnit.SECONDS.sleep(15);
+                continue;
+            }
+            sendDirecWithMultiQueue();
+            System.out.println("all data is sended");
+        }
     }
 
     /**
@@ -93,10 +98,10 @@ public class SendTest {
 
                     if (count <= 0){
                         count = -1;
-                        System.out.println("===========waiting for new data=========="+count);
-                        TimeUnit.SECONDS.sleep(15);
-                        startIndex = 0;
-                        endIndex = 0;
+                        System.out.println("===========waiting for next table=========="+count);
+//                        TimeUnit.SECONDS.sleep(15);
+//                        startIndex = 0;
+//                        endIndex = 0;
                         break;
                     }
 
@@ -135,7 +140,7 @@ public class SendTest {
                         endIndex = 0;
                         //更改为已经发送状态
                         logger.info("update state sql: "+ updateSql);
-                        saveDataAsyn(ids,updateSql);
+                        saveDataAsyn(ids, updateSql);
                         ids.clear();
     //                        return;
                         break;
@@ -143,7 +148,7 @@ public class SendTest {
                 }
             }catch (Exception e){
                 logger.error(e);
-                saveDataAsyn(ids,updateSql);
+                saveDataAsyn(ids, updateSql);
             }
         }
 
