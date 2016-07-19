@@ -68,21 +68,22 @@ public class SendTest {
 
             int count = -1;
             ETable table = XMLParseUtil.getInstance().getEtableByIndex(i);
+            logger.info("------->"+table.getName()+" is ready");
             String updateSql = table.getUpdateSql();
             try {
                 //每个表的数据分页查询后发送
                 while (true) {
                     System.out.println("DBThread task nunm is:  "+ DBThread.getQueueSize());
                     //等待当前数据保存完毕
-                    if(DBThread.getQueueSize() > 0){
-                        System.out.println("DBThread.getQueueSize() = " + DBThread.getQueueSize());
-                        TimeUnit.SECONDS.sleep(15);
-                        startIndex = 0;
-                        endIndex = 0;
-                        count = -1;
-    //                    ids.clear();
-                        continue;
-                    }
+//                    if(DBThread.getQueueSize() > 0){
+//                        System.out.println("DBThread.getQueueSize() = " + DBThread.getQueueSize());
+//                        TimeUnit.SECONDS.sleep(15);
+//                        startIndex = 0;
+//                        endIndex = 0;
+//                        count = -1;
+//    //                    ids.clear();
+//                        continue;
+//                    }
 
                     //新一轮发送开始，重新查询
                     if(count == -1) {
@@ -141,11 +142,12 @@ public class SendTest {
                     }
                 }
             }catch (Exception e){
-                e.printStackTrace();
-            }finally {
+                logger.error(e);
                 saveDataAsyn(ids,updateSql);
             }
         }
+
+        logger.info("----------> the game is end, waiting the next");
     }
 
     private static void saveDataAsyn(List<Integer> ids, final String sql){
