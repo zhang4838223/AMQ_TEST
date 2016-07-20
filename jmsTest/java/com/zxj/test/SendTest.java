@@ -62,10 +62,10 @@ public class SendTest {
         }
 
         //循环发送各个表数据同步
+        Integer pageSize = JMSConstants.getBatchSize();//每次查询一万条
         for (int i = 0; i < tabSize; i++) {
             Integer startIndex = 0;
             Integer endIndex = 0;
-            Integer pageSize = JMSConstants.getBatchSize();//每次查询一万条
             List<Integer> ids = new ArrayList<Integer>();
 
             int count = -1;
@@ -102,7 +102,7 @@ public class SendTest {
                         break;
                     }
 
-                    int totalPages =  (count + pageSize -1) / pageSize;
+//                    int totalPages =  (count + pageSize -1) / pageSize;
 
                     // 0-10001-20001-30001
                     startIndex = endIndex == 0 ? 0 : endIndex + 1;
